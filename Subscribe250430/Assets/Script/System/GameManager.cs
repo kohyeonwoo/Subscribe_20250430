@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     private bool bPause;
+
+    public int money;
+    public TextMeshProUGUI money_text;
 
     private void Awake()
     {
@@ -21,6 +25,11 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         bPause = false;
+    }
+
+    private void Update()
+    {
+        money_text.text = money.ToString();
     }
 
     public void Pause()

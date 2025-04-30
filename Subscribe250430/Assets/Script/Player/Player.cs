@@ -61,7 +61,7 @@ public class Player : MonoBehaviour, IDamageable
     {
         currentHealth -= Damage;
 
-        if(currentHealth < 0)
+        if(currentHealth <= 0)
         {
             Death();
         }

@@ -2,17 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IDamageable
 {
-    // Start is called before the first frame update
-    void Start()
+    public int maxHealth;
+    public int currentHealth;
+
+    public int attackPoint;
+
+    public Animator anim;
+    public Rigidbody rigid;
+
+    public void Damage(int Damage)
     {
-        
+        currentHealth -= Damage;
+
+        if(currentHealth <= 0)
+        {
+            Death();
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Death()
     {
-        
+        this.gameObject.SetActive(false);
+
+        GameManager.Instance.money++;
     }
+
+
 }
