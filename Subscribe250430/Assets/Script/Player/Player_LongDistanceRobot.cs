@@ -6,7 +6,10 @@ public class Player_LongDistanceRobot : Player
 {
 
     public GameObject projectilePrefab;
+    public List<GameObject> poolObject = new List<GameObject>();
     public Transform muzzleLocation;
+
+    public int limitCount;
 
     private void Awake()
     {
@@ -19,6 +22,8 @@ public class Player_LongDistanceRobot : Player
     private void Start()
     {
         InvokeRepeating("UpdateTarget", 0.0f, 0.5f);
+
+        CreateBulletPool();
     }
 
     private void Update()
@@ -38,7 +43,8 @@ public class Player_LongDistanceRobot : Player
 
         if (fireCoolDown <= 0.0f)
         {
-            Shoot();
+           // StartCoroutine(Spawn)
+            anim.SetBool("bAttack", true);
             fireCoolDown = 1.0f / fireRate;
         }
 
@@ -47,15 +53,59 @@ public class Player_LongDistanceRobot : Player
 
     public void Shoot()
     {
-        anim.SetBool("bAttack", true);
-        GameObject bulletGameObject = Instantiate(projectilePrefab, muzzleLocation.position, muzzleLocation.rotation);
+
+        AudioManager.Instance.PlaySFX("GunShootSound");
+        StartCoroutine(SpawnBulletCoroutine());
+        // GameObject bulletGameObject = Instantiate(projectilePrefab, muzzleLocation.position, muzzleLocation.rotation);
         //bulletGameObject.GetComponent<Rigidbody>().velocity = (muzzleLocation.transform.forward) * 40.0f;
-        Projectile projectile = bulletGameObject.GetComponent<Projectile>();
+        Projectile projectile = projectilePrefab.GetComponent<Projectile>();
 
         if(projectile != null)
         {
             projectile.FindTarget(target);
         }
+    }
+
+    private IEnumerator SpawnBulletCoroutine()
+    {
+        SpawnBulletObject();
+
+        yield return new WaitForSeconds(0.5f);
+    }
+
+    public void SpawnBulletObject()
+    {
+        GameObject objects = GetBulletPoolObject();
+
+        if(objects != null)
+        {
+            objects.transform.position = muzzleLocation.position;
+            objects.SetActive(true);
+        }
+    }
+
+    private void CreateBulletPool()
+    {
+        for(int i =0; i < limitCount; i++)
+        {
+            GameObject obj = Instantiate(projectilePrefab);
+            obj.SetActive(false);
+            poolObject.Add(obj);
+        }
+    }
+
+
+    public GameObject GetBulletPoolObject()
+    {
+        for(int i =0; i < poolObject.Count; i++)
+        {
+            if(!poolObject[i].activeInHierarchy)
+            {
+                return poolObject[i];
+            }
+        }
+
+        return null;
     }
 
     private void OnDrawGizmosSelected()

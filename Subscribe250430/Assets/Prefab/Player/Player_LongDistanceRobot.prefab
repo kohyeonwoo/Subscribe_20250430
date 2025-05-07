@@ -2394,7 +2394,7 @@ MonoBehaviour:
   rigid: {fileID: 0}
   target: {fileID: 0}
   partToRotate: {fileID: 8641707833999346793}
-  attackPoint: 0
+  attackPoint: 6
   projectilePrefab: {fileID: 7451245675612823403, guid: 1d9f626e735d72a46a8e32d173e3de86, type: 3}
   muzzleLocation: {fileID: 8145314722668279151}
 --- !u!1 &7997775110078205563
